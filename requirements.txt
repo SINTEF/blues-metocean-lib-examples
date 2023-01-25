@@ -1,0 +1,2 @@
+bluesmet=0.3.0
+windrose==1.8.1
