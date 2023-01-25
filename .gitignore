@@ -1,0 +1,20 @@
+output
+venv
+cache
+.vscode
+
+### Python ###
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.nc
+output/
+venv/
+build/
+dist/
+.pypirc
+*.egg-info/
+
+publish.sh
