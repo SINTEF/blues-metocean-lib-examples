@@ -1,6 +1,8 @@
 from datetime import datetime
 
-import numpy as np
+import xarray as xr
+import pandas as pd
+
 from bluesmet.normet.nora3 import wave_sub_time, arome3km_3hr
 
 lat_pos = 64.1154
@@ -12,7 +14,7 @@ wind_data = arome3km_3hr.get_values_between(
     lat_pos, lon_pos, start_date, end_date, requested_values
 )
 
-wind_time: np.ndarray = wind_data["time"]
+wind_time =  wind_data["time"]
 
 requested_values = [
     "hs",
@@ -25,7 +27,7 @@ requested_values = [
     "hs_swell",
     "tp_swell",
 ]
-wave_data = wave_sub_time.get_values_between(
+wave_data: xr.Dataset = wave_sub_time.get_values_between(
     lat_pos, lon_pos, start_date, end_date, requested_values
 )
 
@@ -51,25 +53,24 @@ lines.append(f"LATITUDE: {lat_pos}, LONGITUDE:   {lon_pos}")
 lines.append("\t\t\t\t\tWIND SPEED\t\t\t\t\t\t\tWIND DIRECTION\t\t\t\t\t\tTOTAL SEA\t\t\tWIND SEA\tSWELL")
 lines.append("\t".join([str(x) for x in column_names]))
 
-wind_speeds = wind_data["wind_speed"]
-wind_directions = wind_data["wind_direction"]
+wind_speeds = wind_data["wind_speed"].values
+wind_directions = wind_data["wind_direction"].values
 
 # Total
-hs_total = wave_data["hs"]
-tp_total = wave_data["tp"]
-dirp_total = wave_data["Pdir"]
-dirm_total = wave_data["thq"]
+hs_total = wave_data["hs"].values
+tp_total = wave_data["tp"].values
+dirp_total = wave_data["Pdir"].values
+dirm_total = wave_data["thq"].values
 # Wind sea
-hs_wind = wave_data["hs_sea"]
-tp_wind = wave_data["tp_sea"]
+hs_wind = wave_data["hs_sea"].values
+tp_wind = wave_data["tp_sea"].values
 #  Swell
-hs_swell = wave_data["hs_swell"]
-tp_swell = wave_data["tp_swell"]
+hs_swell = wave_data["hs_swell"].values
+tp_swell = wave_data["tp_swell"].values
 
-wave_time: np.ndarray = wave_data["time"]
+wave_time = pd.to_datetime(wave_data["time"].values)
 
-for i, ts in enumerate(wave_time):
-    dt: datetime = datetime.fromtimestamp(ts)
+for i, dt in enumerate(wave_time):
     # Print year, month, day, hour from datetime64
     row = []
     row.append(dt.year)

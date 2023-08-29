@@ -1,2 +1,6 @@
-bluesmet=0.3.0
+bluesmet==0.4.0
 windrose==1.8.1
+virocon
+xclim
+openpyxl
+python-docx

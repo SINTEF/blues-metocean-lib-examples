@@ -23,9 +23,11 @@ start = time.time()
 
 years = range(1993,1994)
 
+syears = f"[{years.start}-{years.stop}]"
+
 all_values = {}
 
-requested_values=["wind_speed","wind_direction"]
+requested_values=["wind_speed","wind_direction","height"]
 
 for year in years:
     yearly = {}
@@ -42,6 +44,8 @@ for year in years:
 all_speed = np.ndarray(0)
 all_direction = np.ndarray(0)
 
+iheight = 0
+
 for month in range(1,13):
 
     speed = np.ndarray(0)
@@ -51,7 +55,7 @@ for month in range(1,13):
         yearly = all_values[year]
         monthly=yearly[month]
 
-        mspeed = monthly["wind_speed"][:,0]
+        mspeed = monthly["wind_speed"][:,iheight]
         # Met: North West Up, wind_going_to
         # Wind rose: North East Down, wind coming from
         mdir = np.fmod(monthly["wind_direction"][:,0]+180.0, 360.0)
@@ -63,8 +67,8 @@ for month in range(1,13):
     ax.set_legend()
     name=calendar.month_name[month]
 
-    height = monthly["height"]
-    ax.set_title(f"Montly wind - {name} - all years at {height[0]} m")
+    heights = monthly["height"].values
+    ax.set_title(f"Monthly wind - {name} - {syears} at {heights[iheight]} m")
     ax.figure.savefig(path / f"rose_{month}.png")
 
     all_speed = np.concatenate((all_speed,speed))
@@ -73,7 +77,7 @@ for month in range(1,13):
 ax = WindroseAxes.from_ax()
 ax.bar(all_direction, all_speed,bins=9,nsector=36, opening=0.8, edgecolor="white")
 ax.set_legend()
-ax.set_title(f"Wind - all data at {height[0]} m")
+ax.set_title(f"Wind - all data at {heights[iheight]} m")
 
 ax.figure.savefig(path / "rose_all.png")
 

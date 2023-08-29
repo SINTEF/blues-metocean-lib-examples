@@ -34,8 +34,8 @@ class ScatterExcelWriter:
 
     def write_occurences(self):
         """Write the occurences to the excel file"""
-        upper_row = self.scatter.upper_rows()
-        upper_column = self.scatter.upper_columns()
+        upper_row = self.scatter.row_values()
+        upper_column = self.scatter.column_values()
         occurences = self.scatter.occurences()
         header = (
             [f"{self.row_name}/{self.column_name}"] + upper_column.tolist() + ["Sum"]
@@ -61,8 +61,8 @@ class ScatterExcelWriter:
 
     def write_scatter_values(self, scatter_values):
         """Write the scatter table to the excel file"""
-        row_vals = self.scatter.upper_rows()
-        col_vals = self.scatter.upper_columns()
+        row_vals = self.scatter.row_values()
+        col_vals = self.scatter.column_values()
         self.sheet.append([f"{self.row_name}/{self.column_name}"] + col_vals.tolist())
         for i, value_row in enumerate(scatter_values):
             self.sheet.append([row_vals[i]] + value_row.tolist())
